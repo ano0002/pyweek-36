@@ -21,11 +21,8 @@ class Bullet(Entity):
                     self.destroy()
                     return
 
-            if distance_2d(self, self.world.start) < (self.scale + self.world.start.scale) / 2:
-                self.destroy()
-                return
             
-            if distance_2d(self, self.world.end) < (self.scale + self.world.end.scale) / 2:
+            if distance_2d(self, self.world.destination) < (self.scale + self.world.destination.scale) / 2:
                 self.destroy()
                 self.world.end()
                 return

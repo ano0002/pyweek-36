@@ -30,6 +30,9 @@ class World(Entity):
             self.arrow.scale_x = 0.7
             self.start.look_at_2d(mouse.position*camera.fov)
 
+    def end(self):
+        print("end")
+
 class Asteroid(Entity):
     def __init__(self,mass,position,world=None, **kwargs):
         super().__init__(**kwargs)
@@ -90,7 +93,7 @@ def input(key):
 def update():
     global timer
     if held_keys["left mouse"]:
-        timer += time.dt
+        timer += time.dt / 3
         timer = min(timer,1)
 
 world = World()

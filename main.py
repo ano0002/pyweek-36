@@ -35,13 +35,30 @@ class Asteroid(Entity):
         self.mass = mass
         self.world = world
 
+timer = 0
 
 def input(key):
-    if key == "space":
+    global direction, timer
+    if key == "1":
         asteroid = Asteroid(mass=1,position=mouse.position*camera.fov,world=world)
         world.add_planet(asteroid)
+    if key == "2":
+        asteroid = Asteroid(mass=2,position=mouse.position*camera.fov,world=world)
+        world.add_planet(asteroid)
+    if key == "3":
+        asteroid = Asteroid(mass=3,position=mouse.position*camera.fov,world=world)
+        world.add_planet(asteroid)
     elif key == "left mouse down":
-        bullet = Bullet(world=world,position=mouse.position*camera.fov)
+        direction = (mouse.position*camera.fov-world.start.position).normalized()
+        timer = 0
+    elif key == "left mouse up":
+        velocity = direction*timer
+        velocity = Vec2(velocity.x,velocity.y)
+        Bullet(position=world.start.position+direction*world.start.scale/2,velocity=velocity,world=world)
+
+def update():
+    global timer
+    timer += time.dt
 
 world = World()
 

@@ -8,13 +8,11 @@ class Bullet(Entity):
         self.color = color.white
         self.scale = 1
         self.world = world
-        self.velocity = Vec2(0,0)
     
     def update(self):
         if self.world :
             for asteroid in self.world.asteroids:
                 strength = self.world.gravity * asteroid.mass / distance(asteroid,self)**2
-                print(Vec2(asteroid.x - self.x,asteroid.y-self.y))
                 self.velocity += Vec2(asteroid.x - self.x,asteroid.y-self.y).normalized() * strength * time.dt
                 if asteroid != self and distance(self, asteroid) < (self.scale + asteroid.scale) / 2:
                     destroy(self)

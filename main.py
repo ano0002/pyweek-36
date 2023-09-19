@@ -17,12 +17,17 @@ class World(Entity):
         self.asteroids = asteroids
         self.start = Entity(model="quad",texture="circle", scale=10, position=(Vec2(-40*camera.aspect_ratio,-35)))
         self.destination = Entity(model="quad",texture="circle",color=color.red, scale=10, position=(Vec2(40*camera.aspect_ratio,35)))
-
+        self.arrow = Entity(parent= self.start, model="quad",texture="arrow", scale=0.5, position=(Vec2(0,0)),z=-1,rotation_z=-90)
+        
     def add_planet(self, asteroid):
         self.asteroids.append(asteroid)
 
     def update(self):
-        pass
+        self.start.look_at_2d(mouse.position*camera.fov)
+        if held_keys["left mouse"]:
+            self.arrow.scale_x = timer + 0.5
+        else:
+            self.arrow.scale_x = 0.5
 
 class Asteroid(Entity):
     def __init__(self,mass,position,world=None, **kwargs):
@@ -36,6 +41,7 @@ class Asteroid(Entity):
         self.world = world
 
 timer = 0
+
 
 def input(key):
     global direction, timer
@@ -58,7 +64,9 @@ def input(key):
 
 def update():
     global timer
-    timer += time.dt
+    if held_keys["left mouse"]:
+        timer += time.dt
+
 
 world = World()
 

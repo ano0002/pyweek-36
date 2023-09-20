@@ -1,6 +1,34 @@
 from ursina import *
 from particle import Emiter, Particle
 import random
+
+def is_in_rect(rect, point,radius=0):
+    print(point.x,rect.left - radius,point.x,rect.right + radius,point.y,rect.bottom - radius,point.y,rect.top + radius)
+    if point.x > rect.left - radius and point.x < rect.right + radius and point.y > rect.bottom - radius and point.y < rect.top + radius:
+        return True
+    return False
+
+def get_closest_rect_side(rect, point):
+    closest_side = 0
+    closest_distance = abs(rect.left - point.x)
+    if abs(rect.right - point.x) < closest_distance:
+        closest_side = 1
+        closest_distance = abs(rect.right - point.x)
+    if abs(rect.top - point.y) < closest_distance:
+        closest_side = 2
+        closest_distance = abs(rect.top - point.y)
+    if abs(rect.bottom - point.y) < closest_distance:
+        closest_side = 3
+        closest_distance = abs(rect.bottom - point.y)
+    return closest_side
+
+class Rect:
+    def __init__(self,pos,scale) -> None:
+        self.left = pos.x 
+        self.right = pos.x + scale.x
+        self.top = pos.y 
+        self.bottom = pos.y - scale.y
+
 class Bullet(Entity):
     def __init__(self,velocity=Vec2(0),world=None, add_to_scene_entities=True, **kwargs):
         super().__init__(add_to_scene_entities, **kwargs)
@@ -21,7 +49,6 @@ class Bullet(Entity):
                     self.destroy()
                     return
 
-            
             if distance_2d(self, self.world.destination) < (self.scale + self.world.destination.scale) / 2:
                 self.destroy()
                 self.world.end()
@@ -30,6 +57,22 @@ class Bullet(Entity):
         if self.x < -camera.fov*camera.aspect_ratio/2 or self.x > camera.fov*camera.aspect_ratio/2 or self.y < -camera.fov/2 or self.y > camera.fov/2:
             self.destroy()
             return
+        
+        ray = raycast(self.world_position, Vec3(1,0,0), distance=self.velocity.x+self.scale_x, ignore=(self,))
+        if ray.hit:
+            self.velocity.x *= -1
+        
+        ray = raycast(self.world_position, Vec3(-1,0,0), distance=-self.velocity.x+self.scale_x, ignore=(self,))
+        if ray.hit:
+            self.velocity.x *= -1
+        
+        ray = raycast(self.world_position, Vec3(0,1,0), distance=self.velocity.y+self.scale_y, ignore=(self,))
+        if ray.hit:
+            self.velocity.y *= -1
+        
+        ray = raycast(self.world_position, Vec3(0,-1,0), distance=-self.velocity.y+self.scale_y, ignore=(self,))
+        if ray.hit:
+            self.velocity.y *= -1
         
         self.position += self.velocity
         self.emiter.position = self.world_position

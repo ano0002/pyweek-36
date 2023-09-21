@@ -1,6 +1,5 @@
 from ursina import *
 
-Text.default_font = "ethnocentric rg.otf"
 class MainMenu(Entity):
     def __init__(self, add_to_scene_entities=True, **kwargs):
         super().__init__(parent=camera.ui,add_to_scene_entities=add_to_scene_entities, **kwargs)

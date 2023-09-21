@@ -4,9 +4,9 @@ from ursina import *
 
 import json
 
+window.title = 'Hidden in the Shadows'
 app = Ursina()
 
-window.title = 'Hidden in the Shadows'
 
 camera.orthographic = True
 
@@ -46,16 +46,22 @@ class World(Entity):
         else:
             self.arrow.scale_x = 0.7
             self.start.look_at_2d(mouse.position*camera.fov)
-
+        
     def destroy(self):
         for asteroid in self.asteroids:
             destroy(asteroid)
+        for hiding_zone in self.hiding_zones:
+            destroy(hiding_zone)
+        for bounce_zone in self.bounce_zones:
+            destroy(bounce_zone)
         for bullet in self.bullets:
-            destroy(bullet)
+            bullet.destroy()
         destroy(self.start)
         destroy(self.destination)
         destroy(self.arrow)
-
+        destroy(self.start_display)
+        destroy(self)
+        
     def end(self):
         print("end")
         self.destroy()
@@ -67,7 +73,6 @@ class World(Entity):
         elif key == "left mouse up":
             velocity = self.direction*self.timer
             velocity = Vec2(velocity.x,velocity.y)
-            print(world.start.position+self.direction*world.start.scale/2)
             self.bullets.append(Bullet(position=world.start.position+self.direction*world.start.scale/2,velocity=velocity,world=self))
 
 class Asteroid(Entity):

@@ -2,33 +2,6 @@ from ursina import *
 from particle import Emiter, Particle
 import random
 
-def is_in_rect(rect, point,radius=0):
-    print(point.x,rect.left - radius,point.x,rect.right + radius,point.y,rect.bottom - radius,point.y,rect.top + radius)
-    if point.x > rect.left - radius and point.x < rect.right + radius and point.y > rect.bottom - radius and point.y < rect.top + radius:
-        return True
-    return False
-
-def get_closest_rect_side(rect, point):
-    closest_side = 0
-    closest_distance = abs(rect.left - point.x)
-    if abs(rect.right - point.x) < closest_distance:
-        closest_side = 1
-        closest_distance = abs(rect.right - point.x)
-    if abs(rect.top - point.y) < closest_distance:
-        closest_side = 2
-        closest_distance = abs(rect.top - point.y)
-    if abs(rect.bottom - point.y) < closest_distance:
-        closest_side = 3
-        closest_distance = abs(rect.bottom - point.y)
-    return closest_side
-
-class Rect:
-    def __init__(self,pos,scale) -> None:
-        self.left = pos.x 
-        self.right = pos.x + scale.x
-        self.top = pos.y 
-        self.bottom = pos.y - scale.y
-
 class Bullet(Entity):
     def __init__(self,velocity=Vec2(0),world=None, add_to_scene_entities=True, **kwargs):
         super().__init__(add_to_scene_entities, **kwargs)

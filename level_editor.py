@@ -156,7 +156,7 @@ def input(key):
     elif key == "b":
         world.add_bounce_zone(BounceZone(position=mouse.position*camera.fov,scale=Vec2(0,0)))
         mouse_origin = mouse.position*camera.fov
-    elif key == "s":
+    elif held_keys["control"] and key == "s":
         save_world(world)
 
 

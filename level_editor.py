@@ -89,8 +89,14 @@ def save_world(world):
     for asteroid in world.asteroids:
         data["asteroids"].append({"mass":asteroid.mass,"x":asteroid.x,"y":asteroid.y})
     for hiding_zone in world.hiding_zones:
+        if hiding_zone.scale_x == 0 or hiding_zone.scale_y == 0:
+            continue
         data["hiding_zones"].append({"x":hiding_zone.x,"y":hiding_zone.y,"scale_x":hiding_zone.scale_x,"scale_y":hiding_zone.scale_y})
     for bounce_zone in world.bounce_zones:
+        if bounce_zone.scale_x == 0 or bounce_zone.scale_y == 0:
+            continue
+        if not((bounce_zone.scale_x < 0 and bounce_zone.scale_y < 0) or (bounce_zone.scale_x > 0 and bounce_zone.scale_y > 0)):
+            continue
         data["bounce_zones"].append({"x":bounce_zone.x,"y":bounce_zone.y,"scale_x":bounce_zone.scale_x,"scale_y":bounce_zone.scale_y})
     with open("world.json","w") as file:
         json.dump(data,file)

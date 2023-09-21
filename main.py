@@ -1,4 +1,5 @@
 from bullet import Bullet
+from menu import MainMenu,EndScreen
 
 from ursina import *
 from ursina.shaders.screenspace_shaders.fxaa import fxaa_shader
@@ -17,10 +18,12 @@ camera.fov = 100
 
 
 class World(Entity):
-    def __init__(self,file,gravity=15,asteroids = [], **kwargs):
+    def __init__(self,file,gravity=15,asteroids = [],start_texture="1start",end_texture="2start",end = lambda: print("end"), **kwargs):
         super().__init__(**kwargs)
         self.gravity = gravity
         self.asteroids = asteroids
+        self.on_end = end
+        self.shoot = False
         self.hiding_zones = []
         self.bullets = []
         self.bounce_zones = []
@@ -32,8 +35,8 @@ class World(Entity):
         for bounce_zone in data["bounce_zones"]:
             self.bounce_zones.append(BounceZone(position=Vec2(bounce_zone["x"],bounce_zone["y"]),scale=Vec2(bounce_zone["scale_x"],bounce_zone["scale_y"])))
         self.start = Entity(scale=10, position=Vec2(-40*camera.aspect_ratio,-35))
-        self.start_display = Entity(model="quad",texture="1start", scale=self.start.scale, position=self.start.position)
-        self.destination = Entity(model="quad",texture="2start", scale=10, position=(Vec2(40*camera.aspect_ratio,35)))
+        self.start_display = Entity(model="quad",texture=start_texture, scale=self.start.scale, position=self.start.position)
+        self.destination = Entity(model="quad",texture=end_texture, scale=10, position=(Vec2(40*camera.aspect_ratio,35)))
         self.arrow = Entity(parent= self.start, model="quad",texture="arrow",scale=0.3, scale_x=0.7,z=0.1,rotation_z=-90,origin=(-0.5,0))
         
     def add_planet(self, asteroid):
@@ -43,7 +46,7 @@ class World(Entity):
         self.hiding_zones.append(hiding_zone)
 
     def update(self):
-        if held_keys["left mouse"]:
+        if held_keys["left mouse"] and self.shoot:
             self.timer += time.dt / 3
             self.timer = min(self.timer,1)
             self.arrow.scale_x = self.timer + 0.7
@@ -67,17 +70,19 @@ class World(Entity):
         destroy(self)
         
     def end(self):
-        print("end")
         self.destroy()
+        self.on_end()
 
     def input(self,key):
-        if key == "left mouse down":
-            self.direction = (mouse.position*camera.fov-world.start.position).normalized()
+        if key == "left mouse down" and not self.shoot:
+            self.shoot = True
+            self.direction = (mouse.position*camera.fov-self.start.position).normalized()
             self.timer = 0
-        elif key == "left mouse up":
+        elif key == "left mouse up" and self.shoot:
+            self.shoot = False
             velocity = self.direction*self.timer
             velocity = Vec2(velocity.x,velocity.y)
-            self.bullets.append(Bullet(position=world.start.position+self.direction*world.start.scale/2,velocity=velocity,world=self))
+            self.bullets.append(Bullet(position=self.start.position+self.direction*self.start.scale/2,velocity=velocity,world=self))
 
 class Asteroid(Entity):
     def __init__(self,mass,position,world=None, **kwargs):
@@ -116,11 +121,29 @@ class BounceZone(Entity):
 
 
 
-Audio("loop",loop=True, autoplay=True)
+if __name__ == "__main__":
+    music = Audio("loop",loop=True, autoplay=False)
 
+    total_time = 0
 
-background = Entity(model="quad",texture="space",scale=Vec2(100*camera.aspect_ratio,100),z=10)
+    background = Entity(model="quad",texture="space",scale=Vec2(100*camera.aspect_ratio,100),z=10)
 
-world = World("world.json")
+    def load_world(number):
+        if number < 10:
+            World(f"world{number}.json",end= lambda: load_world(number+1),start_texture=f"{number}start",end_texture=f"{number+1}start")
+        else:
+            EndScreen(total_time)    
+        
+    def start():
+        World("world1.json",end= lambda: load_world(2))
+        music.play()
 
-app.run()
+    def update():
+        global total_time
+        total_time += time.dt
+
+    MainMenu(start,lambda: print("settings"))
+
+    world = World("world1.json")
+
+    app.run()

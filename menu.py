@@ -21,12 +21,20 @@ class SettingsMenu(Entity):
     def __init__(self, add_to_scene_entities=True, **kwargs):
         super().__init__(add_to_scene_entities, **kwargs)
 
+class EndScreen(Entity):
+    def __init__(self,total_time, add_to_scene_entities=True, **kwargs):
+        super().__init__(parent=camera.ui,add_to_scene_entities=add_to_scene_entities, **kwargs)
+        self.total_time = total_time
+        self.background = Entity(model="quad",texture="end",scale=(1*camera.aspect_ratio,1),parent=self,z=1)
+        self.time_text = Text(text=f"Time: {total_time:.2f}s",scale=2,origin=(0,0),parent=self)
+        
+
 if __name__ == "__main__":
     
     window.title = 'Hidden in the Shadows'
     app = Ursina()
     def play():
-        print("play")
+        EndScreen(10)
     
     def open_settings():
         print("settings")

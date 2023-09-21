@@ -1,16 +1,20 @@
 from bullet import Bullet
 
 from ursina import *
+from ursina.shaders.screenspace_shaders.fxaa import fxaa_shader
 
 import json
 
 window.title = 'Hidden in the Shadows'
 app = Ursina()
 
+camera.shader = fxaa_shader
 
 camera.orthographic = True
 
 camera.fov = 100
+
+
 
 class World(Entity):
     def __init__(self,file,gravity=15,asteroids = [], **kwargs):
@@ -29,8 +33,8 @@ class World(Entity):
             self.bounce_zones.append(BounceZone(position=Vec2(bounce_zone["x"],bounce_zone["y"]),scale=Vec2(bounce_zone["scale_x"],bounce_zone["scale_y"])))
         self.start = Entity(scale=10, position=Vec2(-40*camera.aspect_ratio,-35))
         self.start_display = Entity(model="quad",texture="1start", scale=self.start.scale, position=self.start.position)
-        self.destination = Entity(model="quad",texture="circle",color=color.red, scale=10, position=(Vec2(40*camera.aspect_ratio,35)))
-        self.arrow = Entity(parent= self.start, model="quad",texture="arrow",scale=0.3, scale_x=0.7,z=1,rotation_z=-90,origin=(-0.5,0))
+        self.destination = Entity(model="quad",texture="2start", scale=10, position=(Vec2(40*camera.aspect_ratio,35)))
+        self.arrow = Entity(parent= self.start, model="quad",texture="arrow",scale=0.3, scale_x=0.7,z=0.1,rotation_z=-90,origin=(-0.5,0))
         
     def add_planet(self, asteroid):
         self.asteroids.append(asteroid)
@@ -114,6 +118,8 @@ class BounceZone(Entity):
 
 Audio("loop",loop=True, autoplay=True)
 
+
+background = Entity(model="quad",texture="space",scale=Vec2(100*camera.aspect_ratio,100),z=10)
 
 world = World("world.json")
 

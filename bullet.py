@@ -49,7 +49,7 @@ class Bullet(Entity):
         
         self.position += self.velocity
         self.emiter.position = self.world_position
-        
+        self.look_at_2d(self.position+self.velocity)        
     def destroy(self):
         destroy(self.emiter)
         destroy(self)

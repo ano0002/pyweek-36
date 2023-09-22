@@ -77,6 +77,17 @@ class World(Entity):
         self.destroy()
         self.on_end()
 
+    def toggle_menu(self):
+        for bullet in self.bullets:
+            bullet.pause()
+        if hasattr(self,"settings") and self.settings != None:
+            destroy(self.settings)
+            self.settings = None
+        else:
+            self.settings = SettingsMenu(game_music,set_volume,lambda: print("leaving"))
+        
+
+
     def input(self,key):
         if key == "left mouse down" and not self.shoot:
             self.shoot = True
@@ -86,8 +97,9 @@ class World(Entity):
             self.shoot = False
             velocity = self.direction*self.timer
             velocity = Vec2(velocity.x,velocity.y)
-            self.bullets.append(Bullet(position=self.start.position+self.direction*self.start.scale/2,velocity=velocity,world=self,music_volume=game_music.volume))
-
+            self.bullets.append(Bullet(position=self.start.position+self.direction*self.start.scale/2,velocity=velocity,world=self,music=game_music))
+        elif key == "escape":
+            self.toggle_menu()
 class Asteroid(Entity):
     def __init__(self,mass,position,world=None, **kwargs):
         super().__init__(**kwargs)

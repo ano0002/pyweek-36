@@ -38,13 +38,17 @@ class Emiter(Entity):
         self.rate = rate
         self.total_time = 0
         self.particle_args = kwargs
+        self.active = True
         
     def update(self):
-        self.total_time += time.dt
-        if self.total_time >= self.rate:
-            self.total_time = 0
-            self.particles.append(Particle(pos=self.world_position, **self.particle_args))
+        if self.active:
+            self.total_time += time.dt
+            if self.total_time >= self.rate:
+                self.total_time = 0
+                self.particles.append(Particle(pos=self.world_position, **self.particle_args))
         
+    def pause(self):
+        self.active = not self.active
     
         
 if __name__ == "__main__":

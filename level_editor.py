@@ -25,7 +25,18 @@ class World(Entity):
         self.start_display = Entity(model="quad",texture="1start", scale=self.start.scale, position=self.start.position)
         self.destination = Entity(model="quad",texture="2start", scale=10, position=(Vec2(40*camera.aspect_ratio,35)))
         self.arrow = Entity(parent= self.start, model="quad",texture="arrow",scale=0.3, scale_x=0.7,z=1,rotation_z=-90,origin=(-0.5,0))
-        
+        self.bullets = []
+    
+    def input(self,key):
+        if key == "left mouse down":
+            self.direction = (mouse.position*camera.fov-self.start.position).normalized()
+            self.timer = 0
+        elif key == "left mouse up":
+            velocity = self.direction*self.timer
+            velocity = Vec2(velocity.x,velocity.y)
+            if len(self.bullets) > 5:
+                self.bullets[0].destroy()
+            self.bullets.append(Bullet(position=self.start.position+self.direction*self.start.scale/2,velocity=velocity,world=self))
     def add_planet(self, asteroid):
         self.asteroids.append(asteroid)
 
@@ -37,11 +48,13 @@ class World(Entity):
 
     def update(self):
         if held_keys["left mouse"]:
-            self.arrow.scale_x = timer + 0.7
+            self.timer += time.dt / 3
+            self.timer = min(self.timer,1)
+            self.arrow.scale_x = self.timer + 0.7
         else:
             self.arrow.scale_x = 0.7
             self.start.look_at_2d(mouse.position*camera.fov)
-
+            
     def end(self):
         print("end")
 
@@ -137,13 +150,6 @@ def input(key):
     elif key == "0":
         asteroid = Asteroid(mass=10,position=mouse.position*camera.fov,world=world)
         world.add_planet(asteroid)
-    elif key == "left mouse down":
-        direction = (mouse.position*camera.fov-world.start.position).normalized()
-        timer = 0
-    elif key == "left mouse up":
-        velocity = direction*timer
-        velocity = Vec2(velocity.x,velocity.y)
-        Bullet(position=world.start.position+direction*world.start.scale/2,velocity=velocity,world=world)
     elif key == "right mouse down":
         for asteroid in world.asteroids:
             if distance_2d(asteroid, mouse.position*camera.fov) < asteroid.scale/2:
@@ -162,10 +168,7 @@ def input(key):
 
 
 def update():
-    global timer,mouse_origin
-    if held_keys["left mouse"]:
-        timer += time.dt / 3
-        timer = min(timer,1)
+    global mouse_origin
     if held_keys["middle mouse"]:
         world.hiding_zones[-1].scale = mouse.position*camera.fov - mouse_origin
     if held_keys["b"]:

@@ -51,9 +51,9 @@ class Bullet(Entity):
         self.position += self.velocity
         self.emiter.position = self.world_position
         self.look_at_2d(self.position+self.velocity)
-        print(0.5 + self.velocity.length())
-        self.sound.pitch = 0.5 + self.velocity.length()/10        
+        self.sound.pitch = 0.5 + self.velocity.length()      
     def destroy(self,explosion=True):
+        self.world.bullets.remove(self)
         destroy(self.emiter)
         destroy(self.sound)
         if explosion:

@@ -56,8 +56,6 @@ class World(Entity):
             self.arrow.scale_x = 0.7
             self.start.look_at_2d(mouse.position*camera.fov)
             
-        for asteroid in self.asteroids:
-            asteroid.rotate()  # Call the rotate function for each asteroid
         
     def destroy(self):
         for asteroid in self.asteroids:
@@ -101,7 +99,7 @@ class Asteroid(Entity):
         self.world = world
         self.rotation_speed = randint(-45, 45)  # Random initial rotation speed in degrees per second
 
-    def rotate(self):
+    def update(self):
         # Update the rotation of the asteroid based on its rotation speed
         self.rotation_z += self.rotation_speed * time.dt
         # Ensure that the rotation stays within 360 degrees

@@ -1,5 +1,6 @@
 from bullet import Bullet
 from menu import MainMenu,EndScreen,SettingsMenu
+from random import randint
 
 from ursina import *
 from ursina.shaders.screenspace_shaders.fxaa import fxaa_shader
@@ -90,7 +91,8 @@ class Asteroid(Entity):
     def __init__(self,mass,position,world=None, **kwargs):
         super().__init__(**kwargs)
         self.model = "quad"
-        self.texture = "asteroid3"
+        nb = randint(0,2)
+        self.texture = "asteroid"+str(nb)
         self.scale = 3*mass**0.7
         self.position = position
         self.mass = mass

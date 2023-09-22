@@ -146,7 +146,7 @@ if __name__ == "__main__":
     def start():
         global total_time
         click_sound.play()
-        World("world4.json",end= lambda: load_world(2))
+        World("world1.json",end= lambda: load_world(2))
         music.play()
         total_time = 0
 

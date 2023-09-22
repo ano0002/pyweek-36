@@ -1,5 +1,5 @@
 from bullet import Bullet
-from menu import MainMenu,EndScreen
+from menu import MainMenu,EndScreen,SettingsMenu
 
 from ursina import *
 from ursina.shaders.screenspace_shaders.fxaa import fxaa_shader
@@ -124,10 +124,11 @@ class BounceZone(Entity):
 if __name__ == "__main__":
     music = Audio("loop",loop=True, autoplay=False)
 
-    total_time = 0
 
     background = Entity(model="quad",texture="space",scale=Vec2(100*camera.aspect_ratio,100),z=10)
 
+    total_time = 0
+    
     def load_world(number):
         if number < 10:
             World(f"world{number}.json",end= lambda: load_world(number+1),start_texture=f"{number}start",end_texture=f"{number+1}start")
@@ -135,15 +136,22 @@ if __name__ == "__main__":
             EndScreen(total_time)    
         
     def start():
+        global total_time
         World("world1.json",end= lambda: load_world(2))
         music.play()
+        total_time = 0
 
     def update():
         global total_time
         total_time += time.dt
+    
+    def set_volume(volume):
+        music.volume = volume
+    
+    def settings():
+        SettingsMenu(set_volume)
 
-    MainMenu(start,lambda: print("settings"))
+    MainMenu(start,settings)
 
-    world = World("world1.json")
 
     app.run()

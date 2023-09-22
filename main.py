@@ -4,7 +4,7 @@ from menu import MainMenu,EndScreen,SettingsMenu
 from ursina import *
 from ursina.shaders.screenspace_shaders.fxaa import fxaa_shader
 
-import json
+import json,random
 
 window.title = 'Hidden in the Shadows'
 app = Ursina()
@@ -90,7 +90,7 @@ class Asteroid(Entity):
     def __init__(self,mass,position,world=None, **kwargs):
         super().__init__(**kwargs)
         self.model = "quad"
-        self.texture = "asteroid3"
+        self.texture = random.choice(("asteroid2","asteroid3"))
         self.scale = 3*mass**0.7
         self.position = position
         self.mass = mass
@@ -113,7 +113,6 @@ class BounceZone(Entity):
         super().__init__(**kwargs)
         self.model = "quad"
         self.texture = "zone"
-        self.color = color.rgb(0, 27, 120)
         self.scale = scale
         self.position = Vec3(*position,0)
         self.origin= Vec2(-0.5,-0.5)
@@ -138,7 +137,7 @@ if __name__ == "__main__":
     def start():
         global total_time
         click_sound.play()
-        World("world1.json",end= lambda: load_world(2))
+        World("world4.json",end= lambda: load_world(2))
         music.play()
         total_time = 0
 

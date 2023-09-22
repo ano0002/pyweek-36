@@ -60,7 +60,7 @@ class Bullet(Entity):
             self.explosion_sound.play()
             destroy(self.explosion_sound, delay=self.explosion_sound.length)
             emiter = Emiter(rate=0.1,start=lambda : random.random()*2,maxi=lambda : random.random()*1,length=0.1,color=lambda : random.choice((color.yellow,color.red,color.orange)),curve=curve.linear,velocity=lambda : Vec2(random.random()*2-1,random.random()*2-1))
-            emiter.position = self.world_position
+            emiter.position = self.world_position-Vec3(0,0,1)
             destroy(emiter, delay=self.explosion_sound.length*0.75)
         else:
             destroy(self.explosion_sound)

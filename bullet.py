@@ -6,8 +6,8 @@ class Bullet(Entity):
     def __init__(self,velocity=Vec2(0),world=None,music=0, add_to_scene_entities=True, **kwargs):
         super().__init__(add_to_scene_entities, **kwargs)
         
-        self.texture = 'Vaiseau1.2'
         self.model = 'quad'
+        self.texture = 'Vaisseau1'
         self.color = color.white
         self.scale = 1
         self.world = world

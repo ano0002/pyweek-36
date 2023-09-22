@@ -3,7 +3,7 @@ from particle import Emiter, Particle
 import random
 
 class Bullet(Entity):
-    def __init__(self,velocity=Vec2(0),world=None, add_to_scene_entities=True, **kwargs):
+    def __init__(self,velocity=Vec2(0),world=None,music_volume=0.5, add_to_scene_entities=True, **kwargs):
         super().__init__(add_to_scene_entities, **kwargs)
         
         self.model = 'quad'
@@ -12,7 +12,8 @@ class Bullet(Entity):
         self.world = world
         self.velocity = velocity
         self.emiter = Emiter(rate=0.01,start=lambda : random.random()*2,maxi=lambda : random.random()*1,length=0.1,color=lambda : random.choice((color.yellow,color.red,color.orange)),curve=curve.linear,velocity=-self.velocity)
-    
+        self.sound = Audio("rocket",loop=True, autoplay=True,volume=music_volume*0.5)
+        self.explosion_sound = Audio("explosion.mp3",loop=False, autoplay=False,volume=music_volume*0.5)
     def update(self):
         if self.world :
             for asteroid in self.world.asteroids:
@@ -23,7 +24,7 @@ class Bullet(Entity):
                     return
 
             if distance_2d(self, self.world.destination) < (self.scale + self.world.destination.scale) / 2:
-                self.destroy()
+                self.destroy(explosion= False)
                 self.world.end()
                 return
         
@@ -49,9 +50,20 @@ class Bullet(Entity):
         
         self.position += self.velocity
         self.emiter.position = self.world_position
-        self.look_at_2d(self.position+self.velocity)        
-    def destroy(self):
+        self.look_at_2d(self.position+self.velocity)
+        print(0.5 + self.velocity.length())
+        self.sound.pitch = 0.5 + self.velocity.length()/10        
+    def destroy(self,explosion=True):
         destroy(self.emiter)
+        destroy(self.sound)
+        if explosion:
+            self.explosion_sound.play()
+            destroy(self.explosion_sound, delay=self.explosion_sound.length)
+            emiter = Emiter(rate=0.1,start=lambda : random.random()*2,maxi=lambda : random.random()*1,length=0.1,color=lambda : random.choice((color.yellow,color.red,color.orange)),curve=curve.linear,velocity=lambda : Vec2(random.random()*2-1,random.random()*2-1))
+            emiter.position = self.world_position
+            destroy(emiter, delay=self.explosion_sound.length*0.75)
+        else:
+            destroy(self.explosion_sound)
         destroy(self)
 
 if __name__ == "__main__":

@@ -1,1 +1,1 @@
-{"asteroids": [], "hiding_zones": [], "bounce_zones": []}
+{"asteroids": [{"mass": 10, "x": 3.703700065612793, "y": 24.074073791503906}], "hiding_zones": [], "bounce_zones": [{"x": 17.59259033203125, "y": 15.625, "scale_x": -27.083328247070312, "scale_y": -63.19444274902344}]}

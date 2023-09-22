@@ -23,7 +23,7 @@ class World(Entity):
         self.bounce_zones = []
         self.start = Entity(scale=10, position=Vec2(-40*camera.aspect_ratio,-35))
         self.start_display = Entity(model="quad",texture="1start", scale=self.start.scale, position=self.start.position)
-        self.destination = Entity(model="quad",texture="circle",color=color.red, scale=10, position=(Vec2(40*camera.aspect_ratio,35)))
+        self.destination = Entity(model="quad",texture="2start", scale=10, position=(Vec2(40*camera.aspect_ratio,35)))
         self.arrow = Entity(parent= self.start, model="quad",texture="arrow",scale=0.3, scale_x=0.7,z=1,rotation_z=-90,origin=(-0.5,0))
         
     def add_planet(self, asteroid):

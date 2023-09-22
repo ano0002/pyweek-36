@@ -18,10 +18,10 @@ camera.fov = 100
 
 
 class World(Entity):
-    def __init__(self,file,gravity=15,asteroids = [],start_texture="1start",end_texture="2start",end = lambda: print("end"), **kwargs):
+    def __init__(self,file,gravity=15,background="space",start_texture="1start",end_texture="2start",end = lambda: print("end"), **kwargs):
         super().__init__(**kwargs)
         self.gravity = gravity
-        self.asteroids = asteroids
+        self.asteroids = []
         self.on_end = end
         self.shoot = False
         self.hiding_zones = []
@@ -38,6 +38,7 @@ class World(Entity):
         self.start_display = Entity(model="quad",texture=start_texture, scale=self.start.scale, position=self.start.position)
         self.destination = Entity(model="quad",texture=end_texture, scale=10, position=(Vec2(40*camera.aspect_ratio,35)))
         self.arrow = Entity(parent= self.start, model="quad",texture="arrow",scale=0.3, scale_x=0.7,z=0.1,rotation_z=-90,origin=(-0.5,0))
+        self.background = Entity(model="quad",texture=background,scale=Vec2(100*camera.aspect_ratio,100),z=10)
         
     def add_planet(self, asteroid):
         self.asteroids.append(asteroid)
@@ -68,6 +69,7 @@ class World(Entity):
         destroy(self.arrow)
         destroy(self.start_display)
         destroy(self)
+        destroy(self.background)
         
     def end(self):
         self.destroy()
@@ -82,7 +84,7 @@ class World(Entity):
             self.shoot = False
             velocity = self.direction*self.timer
             velocity = Vec2(velocity.x,velocity.y)
-            self.bullets.append(Bullet(position=self.start.position+self.direction*self.start.scale/2,velocity=velocity,world=self))
+            self.bullets.append(Bullet(position=self.start.position+self.direction*self.start.scale/2,velocity=velocity,world=self,music_volume=music.volume))
 
 class Asteroid(Entity):
     def __init__(self,mass,position,world=None, **kwargs):
@@ -124,8 +126,7 @@ class BounceZone(Entity):
 if __name__ == "__main__":
     music = Audio("loop",loop=True, autoplay=False,volume=0.5)
 
-
-    background = Entity(model="quad",texture="space",scale=Vec2(100*camera.aspect_ratio,100),z=10)
+    click_sound = Audio("click",loop=False, autoplay=False,volume=0.5)
 
     total_time = 0
     
@@ -137,6 +138,7 @@ if __name__ == "__main__":
         
     def start():
         global total_time
+        click_sound.play()
         World("world1.json",end= lambda: load_world(2))
         music.play()
         total_time = 0
@@ -148,11 +150,14 @@ if __name__ == "__main__":
     
     def set_volume(volume):
         music.volume = volume
+        click_sound.volume = volume*1.5
     
     def settings():
+        click_sound.play()
         SettingsMenu(music,set_volume,open_menu)
 
     def open_menu():
+        click_sound.play()
         MainMenu(start,settings)
 
     open_menu()

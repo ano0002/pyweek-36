@@ -86,7 +86,7 @@ class World(Entity):
             self.shoot = False
             velocity = self.direction*self.timer
             velocity = Vec2(velocity.x,velocity.y)
-            self.bullets.append(Bullet(position=self.start.position+self.direction*self.start.scale/2,velocity=velocity,world=self,music_volume=music.volume))
+            self.bullets.append(Bullet(position=self.start.position+self.direction*self.start.scale/2,velocity=velocity,world=self,music_volume=game_music.volume))
 
 class Asteroid(Entity):
     def __init__(self,mass,position,world=None, **kwargs):
@@ -131,7 +131,7 @@ class BounceZone(Entity):
 
 
 if __name__ == "__main__":
-    music = Audio("loop",loop=True, autoplay=False,volume=0.5)
+    game_music = Audio("loop",loop=True, autoplay=False,volume=0.5)
 
     click_sound = Audio("click",loop=False, autoplay=False,volume=0.5)
 
@@ -147,7 +147,7 @@ if __name__ == "__main__":
         global total_time
         click_sound.play()
         World("world1.json",end= lambda: load_world(2))
-        music.play()
+        game_music.play()
         total_time = 0
 
     def update():
@@ -156,12 +156,12 @@ if __name__ == "__main__":
         camera.set_shader_input("window_size", window.size)
     
     def set_volume(volume):
-        music.volume = volume
+        game_music.volume = volume
         click_sound.volume = volume*1.5
     
     def settings():
         click_sound.play()
-        SettingsMenu(music,set_volume,open_menu)
+        SettingsMenu(game_music,set_volume,open_menu)
 
     def open_menu():
         click_sound.play()

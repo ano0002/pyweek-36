@@ -29,7 +29,7 @@ class World(Entity):
         self.bounce_zones = []
         data = json.load(open(file))
         for asteroid in data["asteroids"]:
-            self.add_planet(Asteroid(mass=asteroid["mass"],position=Vec2(asteroid["x"],asteroid["y"]),world=self))
+            self.add_planet(Asteroid(mass=asteroid["mass"],position=Vec3(asteroid["x"],asteroid["y"],-1),world=self))
         for hiding_zone in data["hiding_zones"]:
             self.add_hiding_zone(HidingZone(position=Vec2(hiding_zone["x"],hiding_zone["y"]),scale=Vec2(hiding_zone["scale_x"],hiding_zone["scale_y"])))
         for bounce_zone in data["bounce_zones"]:

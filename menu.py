@@ -73,7 +73,7 @@ class MainMenu(Entity):
     
 class SettingsMenu(Entity):
     def __init__(self,music,volume_func,on_leave=lambda: print("leaving"), add_to_scene_entities=True, **kwargs):
-        super().__init__(parent=camera.ui,add_to_scene_entities=add_to_scene_entities,z=-15, **kwargs)
+        super().__init__(parent=camera.ui,add_to_scene_entities=add_to_scene_entities,z=-1, **kwargs)
         self.background = Entity(model="quad",texture="menu",scale=(1*camera.aspect_ratio,1),parent=self,z=1)
         self.on_leave = on_leave
         self.volume_slider = Slider(min=0, max=1, step=0.01, default=music.volume, dynamic=True, position=(-0.7,-0.2),parent=self, text='Volume', text_origin=(-.3,0), text_scale=0.5, text_offset=(-.1,0), on_value_changed=volume_func,bar_color=color.white)

@@ -14,6 +14,7 @@ from random import randint
 
 from ursina import *
 from ursina.shaders.screenspace_shaders.fxaa import fxaa_shader
+from curves import CubicBezier
 
 import json,random
 
@@ -84,8 +85,11 @@ class World(Entity):
         destroy(self.background)
         
     def end(self):
-        self.destroy()
-        self.on_end()
+        transition = Entity(model="quad",color=color.black,scale=Vec2(100*camera.aspect_ratio,100),position=Vec3(100*camera.aspect_ratio,0,-10))
+        transition.animate_position(Vec3(-100*camera.aspect_ratio,0,-10),duration=3,curve=curve.linear)
+        invoke(self.destroy, delay=1.5)
+        invoke(self.on_end, delay=1.5)
+        destroy(transition,delay = 3)
 
     def toggle_menu(self):
         for bullet in self.bullets:

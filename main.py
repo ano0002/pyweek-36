@@ -122,7 +122,7 @@ class BounceZone(Entity):
 
 
 if __name__ == "__main__":
-    music = Audio("loop",loop=True, autoplay=False)
+    music = Audio("loop",loop=True, autoplay=False,volume=0.5)
 
 
     background = Entity(model="quad",texture="space",scale=Vec2(100*camera.aspect_ratio,100),z=10)
@@ -144,14 +144,17 @@ if __name__ == "__main__":
     def update():
         global total_time
         total_time += time.dt
+        camera.set_shader_input("window_size", window.size)
     
     def set_volume(volume):
         music.volume = volume
     
     def settings():
-        SettingsMenu(set_volume)
+        SettingsMenu(music,set_volume,open_menu)
 
-    MainMenu(start,settings)
+    def open_menu():
+        MainMenu(start,settings)
 
+    open_menu()
 
     app.run()

@@ -76,8 +76,8 @@ class SettingsMenu(Entity):
         super().__init__(parent=camera.ui,add_to_scene_entities=add_to_scene_entities, **kwargs)
         self.background = Entity(model="quad",texture="menu",scale=(1*camera.aspect_ratio,1),parent=self,z=1)
         self.on_leave = on_leave
-        self.volume_slider = Slider(min=0, max=1, step=0.01, default=music.volume, dynamic=True, position=(-0.5,-0.2),parent=self, text='Volume', text_origin=(-.3,0), text_scale=0.5, text_offset=(-.1,0), on_value_changed=volume_func,bar_color=color.white)
-        self.close_button = Button(model="quad",texture="closeButton",scale=Vec2(.03)*3,position=(-.5,.1),on_click=self.leave,parent=self,highlight_texture="closeButton",color=color.white,highlight_color=color.gray)
+        self.volume_slider = Slider(min=0, max=1, step=0.01, default=music.volume, dynamic=True, position=(-0.7,-0.2),parent=self, text='Volume', text_origin=(-.3,0), text_scale=0.5, text_offset=(-.1,0), on_value_changed=volume_func,bar_color=color.white)
+        self.close_button = Button(model="quad",texture="BoutonCloseOff",scale=Vec2(.1994,.0392)*3,position=(-.5,.1),on_click=self.leave,parent=self,highlight_texture="BoutonCloseOn",color=color.white,highlight_color=color.gray)
 
     def input(self,key):
         if key == "escape":
@@ -100,7 +100,7 @@ if __name__ == "__main__":
     window.title = 'Hidden in the Shadows'
     app = Ursina()
     
-    music = Audio("loop",loop=True, autoplay=True)
+    music = Audio("loop",loop=True, autoplay=True,volume = 0.5)
     
     def play():
         EndScreen(10)

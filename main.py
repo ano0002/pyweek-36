@@ -146,6 +146,8 @@ class BounceZone(Entity):
 if __name__ == "__main__":
     game_music = Audio("loop",loop=True, autoplay=False,volume=0.5)
 
+    victory_sound = Audio("Victory",loop=False, autoplay=False,volume=0.5)
+
     click_sound = Audio("click",loop=False, autoplay=False,volume=0.5)
 
     total_time = 0
@@ -154,12 +156,14 @@ if __name__ == "__main__":
         if number < 10:
             World(f"world{number}.json",end= lambda: load_world(number+1),start_texture=f"{number}start",end_texture=f"{number+1}start")
         else:
-            EndScreen(total_time)    
+            EndScreen(total_time)
+            game_music.stop()
+            victory_sound.play()  
         
     def start():
         global total_time
         click_sound.play()
-        World("world1.json",end= lambda: load_world(2))
+        World("world1.json",end= lambda: load_world(10))
         game_music.play()
         total_time = 0
 
@@ -171,6 +175,7 @@ if __name__ == "__main__":
     def set_volume(volume):
         game_music.volume = volume
         click_sound.volume = volume*1.5
+        victory_sound.volume = volume
     
     def settings():
         click_sound.play()

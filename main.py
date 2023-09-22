@@ -56,8 +56,6 @@ class World(Entity):
             self.arrow.scale_x = 0.7
             self.start.look_at_2d(mouse.position*camera.fov)
             
-        for asteroid in self.asteroids:
-            asteroid.rotate()  # Call the rotate function for each asteroid
         
     def destroy(self):
         for asteroid in self.asteroids:
@@ -88,7 +86,7 @@ class World(Entity):
             self.shoot = False
             velocity = self.direction*self.timer
             velocity = Vec2(velocity.x,velocity.y)
-            self.bullets.append(Bullet(position=self.start.position+self.direction*self.start.scale/2,velocity=velocity,world=self,music_volume=music.volume))
+            self.bullets.append(Bullet(position=self.start.position+self.direction*self.start.scale/2,velocity=velocity,world=self,music_volume=game_music.volume))
 
 class Asteroid(Entity):
     def __init__(self,mass,position,world=None, **kwargs):
@@ -101,7 +99,7 @@ class Asteroid(Entity):
         self.world = world
         self.rotation_speed = randint(-45, 45)  # Random initial rotation speed in degrees per second
 
-    def rotate(self):
+    def update(self):
         # Update the rotation of the asteroid based on its rotation speed
         self.rotation_z += self.rotation_speed * time.dt
         # Ensure that the rotation stays within 360 degrees
@@ -133,7 +131,7 @@ class BounceZone(Entity):
 
 
 if __name__ == "__main__":
-    music = Audio("loop",loop=True, autoplay=False,volume=0.5)
+    game_music = Audio("loop",loop=True, autoplay=False,volume=0.5)
 
     click_sound = Audio("click",loop=False, autoplay=False,volume=0.5)
 
@@ -148,8 +146,8 @@ if __name__ == "__main__":
     def start():
         global total_time
         click_sound.play()
-        World("world4.json",end= lambda: load_world(2))
-        music.play()
+        World("world1.json",end= lambda: load_world(2))
+        game_music.play()
         total_time = 0
 
     def update():
@@ -158,12 +156,12 @@ if __name__ == "__main__":
         camera.set_shader_input("window_size", window.size)
     
     def set_volume(volume):
-        music.volume = volume
+        game_music.volume = volume
         click_sound.volume = volume*1.5
     
     def settings():
         click_sound.play()
-        SettingsMenu(music,set_volume,open_menu)
+        SettingsMenu(game_music,set_volume,open_menu)
 
     def open_menu():
         click_sound.play()

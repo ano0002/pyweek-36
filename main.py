@@ -90,8 +90,7 @@ class Asteroid(Entity):
     def __init__(self,mass,position,world=None, **kwargs):
         super().__init__(**kwargs)
         self.model = "quad"
-        self.texture = "circle"
-        self.color = color.rgb(74, 27, 0)
+        self.texture = "asteroid3"
         self.scale = 3*mass**0.7
         self.position = position
         self.mass = mass

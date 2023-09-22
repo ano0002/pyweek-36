@@ -9,6 +9,7 @@ class Bullet(Entity):
         self.model = 'quad'
         self.texture = 'Vaisseau1'
         self.color = color.white
+        self.vaisseau = Entity(model='quad',texture='Vaisseau1',color=color.white,scale=Vec2(3),parent = self,rotation_z=-90,origin=(-0.5,0))
         self.scale = 1
         self.world = world
         self.velocity = velocity

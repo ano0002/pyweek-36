@@ -7,7 +7,7 @@ To do so you'll need to run the following command in your terminal.<br>
 `$ pip install -r requirements.txt`<br>
 Once you have done that you can run the game by running the following command in your terminal.<br>
 `$ python run_game.py`<br>
-Or by double clicking on the run_game.py file.
+Or by double clicking on the `run_game.py` file.
 
 ## How to play
 Hello players and welcome to Unknown Space.<br>

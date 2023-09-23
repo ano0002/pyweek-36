@@ -19,7 +19,8 @@ from curves import CubicBezier
 import json,random
 
 window.title = 'Hidden in the Shadows'
-app = Ursina()
+
+app = Ursina(development_mode=False,borderless=False,window_title="Hidden in the Shadows",vsync=True)
 
 camera.shader = fxaa_shader
 
@@ -158,6 +159,9 @@ class BounceZone(Entity):
 
 
 if __name__ == "__main__":
+    
+    menu_music = Audio("Menu",loop=True, autoplay=True,volume=0.5)
+    
     game_music = Audio("loop",loop=True, autoplay=False,volume=0.5)
 
     victory_sound = Audio("Victory",loop=False, autoplay=False,volume=0.5)
@@ -178,6 +182,7 @@ if __name__ == "__main__":
         global total_time
         click_sound.play()
         World("world1.json",end= lambda: load_world(2))
+        menu_music.stop()
         game_music.play()
         total_time = 0
 
@@ -190,6 +195,7 @@ if __name__ == "__main__":
         game_music.volume = volume
         click_sound.volume = volume*1.5
         victory_sound.volume = volume
+        menu_music.volume = volume
     
     def settings():
         click_sound.play()

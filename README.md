@@ -30,6 +30,6 @@ At the end of the game (if you reach the end) you'll be given your time on the l
 ### Sound effects
 - [Pixabay](https://pixabay.com/fr/)
 ### Game Design
-- [Natissan](https://github.com/LeBN)
 - [Hormone](https://github.com/Hormone4)
 - [ano002](https://anatole-sot.xyz/)
+- [Natissan](https://github.com/LeBN)

@@ -1,5 +1,5 @@
 # Pyweek 36 : Unknown Space
-<img src="https://github.com/ano0002/pyweek-36/blob/main/assets/end.png" height="500" />
+<img src="https://github.com/ano0002/pyweek-36/blob/main/assets/Jaquette.png" height="300" />
 
 ## How to run the game
 To run the game you'll need to have python 3.10 or higher installed.<br>
